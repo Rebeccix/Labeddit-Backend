@@ -1,17 +1,20 @@
-import z from "zod"
+import z from "zod";
 
 export interface GetPostsInputDTO {
-    token: string
+  token: string;
 }
 
 export interface GetPostsOutputDTO {
-    id: string;
-    name: string;
-    content: string;
-    like: number;
-    comments: number;
+  id: string;
+  name: string;
+  content: string;
+  like: number;
+  dislike: number;
+  comments: number;
 }
 
-export const GetPostsScheama = z.object({
-    token: z.string().min(1)
-}).transform((data) => data as GetPostsInputDTO)
+export const GetPostsScheama = z
+  .object({
+    token: z.string().min(1),
+  })
+  .transform((data) => data as GetPostsInputDTO);

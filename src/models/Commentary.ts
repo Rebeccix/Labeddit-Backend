@@ -6,6 +6,7 @@ export interface CommentaryDB {
   post_id: string;
   content: string;
   like: number;
+  dislike: number;
   created_at: string;
 }
 
@@ -16,12 +17,14 @@ export interface CommentaryWithPostInfoDB {
   creator_name: string;
   content: string;
   like: number;
+  dislike: number;
   comments: number;
   id_commentary: string;
   creator_id: string;
   commentary_creator_name: string;
   content_commentary: string;
   like_commentary: number;
+  dislike_commentary: number;
 }
 
 export interface CommentsDB {
@@ -37,6 +40,7 @@ export interface PostWithCommentsDB {
   creator_name: string;
   content: string;
   like: number;
+  dislike: number;
   comments: number;
   commentaries: CommentsDB[];
 }
@@ -54,6 +58,7 @@ export interface PostWihCommentModel {
   creatorName?: string;
   content?: string;
   like?: number;
+  dislike?: number;
   comments?: number;
   commentaries: CommentsModel[];
 }
@@ -65,6 +70,7 @@ export class Commentary {
     private postId: string,
     private content: string,
     private like: number,
+    private dislike: number,
     private createdAt: string,
     private commentaryCreator?: string,
     private postCreator?: PostsWithCreatorNameModel
@@ -90,6 +96,10 @@ export class Commentary {
     return this.like;
   }
 
+  getDislike(): number {
+    return this.dislike;
+  }
+
   getCreatedAt(): string {
     return this.createdAt;
   }
@@ -109,6 +119,7 @@ export class Commentary {
       post_id: this.postId,
       content: this.content,
       like: this.like,
+      dislike: this.dislike,
       created_at: this.createdAt,
     };
   }

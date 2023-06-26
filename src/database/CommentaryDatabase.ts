@@ -30,12 +30,14 @@ export class CommentaryDatabase extends BaseDatabase {
         `${CommentaryDatabase.TABLE_USERS}.name as creator_name`,
         `${CommentaryDatabase.TABLE_POSTS}.content`,
         `${CommentaryDatabase.TABLE_POSTS}.like`,
+        `${CommentaryDatabase.TABLE_POSTS}.dislike`,
         `${CommentaryDatabase.TABLE_POSTS}.comments`,
         `${CommentaryDatabase.TABLE_COMMENTARY}.id as id_commentary `,
         `${CommentaryDatabase.TABLE_COMMENTARY}.creator_id as creator_id `,
         `${CommentaryDatabase.TABLE_USERS}_${CommentaryDatabase.TABLE_COMMENTARY}.name as commentary_creator_name`,
         `${CommentaryDatabase.TABLE_COMMENTARY}.content as content_commentary`,
-        `${CommentaryDatabase.TABLE_COMMENTARY}.like as like_commentary`
+        `${CommentaryDatabase.TABLE_COMMENTARY}.like as like_commentary`,
+        `${CommentaryDatabase.TABLE_COMMENTARY}.dislike as dislike_commentary`
       )
       .join(
         CommentaryDatabase.TABLE_USERS,
@@ -61,6 +63,7 @@ export class CommentaryDatabase extends BaseDatabase {
           `${CommentaryDatabase.TABLE_USERS}.name as creator_name`,
           `${CommentaryDatabase.TABLE_POSTS}.content`,
           `${CommentaryDatabase.TABLE_POSTS}.like`,
+          `${CommentaryDatabase.TABLE_POSTS}.dislike`,
           `${CommentaryDatabase.TABLE_POSTS}.comments`)
           .join(
             CommentaryDatabase.TABLE_USERS,

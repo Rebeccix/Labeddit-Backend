@@ -40,6 +40,7 @@ CREATE TABLE
         creator_id TEXT NOT NULL,
         content TEXT NOT NULL,
         like INTEGER NOT NULL DEFAULT(0),
+        dislike INTEGER NOT NULL DEFAULT(0),
         comments INTEGER NOT NULL DEFAULT(0),
         created_at TEXT NOT NULL DEFAULT(DATETIME()),
         updated_at TEXT NOT NULL DEFAULT(DATETIME()),
@@ -73,6 +74,17 @@ VALUES (
         '2023-06-02T13:11:15.619Z'
     );
 
+    
+CREATE TABLE
+    like_dislike_post (
+        user_id TEXT NOT NULL,
+        post_id TEXT NOT NULL,
+        like INTEGER NOT NULL,
+        Foreign Key (user_id) REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
+        Foreign Key (post_id) REFERENCES posts (id) ON UPDATE CASCADE ON DELETE CASCADE
+    );
+
+
 CREATE TABLE
     commentary (
         id TEXT PRIMARY KEY UNIQUE NOT NULL,
@@ -80,6 +92,7 @@ CREATE TABLE
         post_id TEXT NOT NULL,
         content TEXT NOT NULL,
         like INTEGER NOT NULL DEFAULT(0),
+        dislike INTEGER NOT NULL DEFAULT(0),
         created_at TEXT NOT NULL DEFAULT(DATETIME()),
         Foreign Key (creator_id) REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
         Foreign Key (post_id) REFERENCES posts (id) ON UPDATE CASCADE ON DELETE CASCADE
@@ -92,6 +105,15 @@ VALUES ('c001', 'u001', 'p001', 'oin', 5), (
         'p002',
         'teste',
         18
+    );
+
+    CREATE TABLE
+    like_dislike_commentary (
+        user_id TEXT NOT NULL,
+        commentary_id TEXT NOT NULL,
+        like INTEGER NOT NULL,
+        Foreign Key (user_id) REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
+        Foreign Key (commentary_id ) REFERENCES commentary (id) ON UPDATE CASCADE ON DELETE CASCADE
     );
 
 SELECT * FROM users;

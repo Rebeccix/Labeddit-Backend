@@ -48,6 +48,7 @@ export class CommentaryBusiness {
       postFound.id,
       content,
       0,
+      0,
       new Date().toISOString()
     ).toCommentaryDB();
 
@@ -57,7 +58,7 @@ export class CommentaryBusiness {
 
     return output;
   };
-
+  // : Promise<GetCommentaryByIdOutputDTO> 
   public getCommentaryById = async (input: GetCommentaryByIdInputDTO) => {
     const { token, id } = input;
 
@@ -76,6 +77,7 @@ export class CommentaryBusiness {
         name: data.creator_name,
         content: data.content,
         like: data.like,
+        dislike: data.dislike,
         comments: data.comments,
       };
 
@@ -85,37 +87,45 @@ export class CommentaryBusiness {
         data.id,
         data.content_commentary,
         data.like_commentary,
+        data.dislike_commentary,
         new Date().toISOString(),
         data.commentary_creator_name,
         postCreator,
       );
 
       return CommentaryWithPostCreator;
-    });
+    })
 
-    let postWithCommentaryModel: PostWihCommentModel = {
-      id: postWithCommentaryInstanced[0].getPostCreator()?.id,
-      creatorName: postWithCommentaryInstanced[0].getPostCreator()?.name,
-      content: postWithCommentaryInstanced[0].getPostCreator()?.content,
-      like: postWithCommentaryInstanced[0].getPostCreator()?.like,
-      comments: postWithCommentaryInstanced[0].getPostCreator()?.comments,
-      commentaries: postWithCommentaryInstanced.map((data) => ({
-        idCommentary: data.getId(),
-        creatorId: data.getCreatorId(),
-        commentaryCreatorName: data.getCommentaryCreator(),
-        contentCommentary: data.getContent(),
-        likeCommentary: data.getLike(),
-      })),
-    };
-    
-    if (!postWithCommentaryModel.commentaries[0].idCommentary) {
-      postWithCommentaryModel = {
-        ...postWithCommentaryModel,
+let output: PostWihCommentModel
+
+    if(!postWithCommentaryInstanced[0].getId()) {
+      return output = {
+        id: postWithCommentaryInstanced[0].getPostCreator()?.id,
+        creatorName: postWithCommentaryInstanced[0].getPostCreator()?.name,
+        content: postWithCommentaryInstanced[0].getPostCreator()?.content,
+        like: postWithCommentaryInstanced[0].getPostCreator()?.like,
+        dislike: postWithCommentaryInstanced[0].getPostCreator()?.dislike,
+        comments: postWithCommentaryInstanced[0].getPostCreator()?.comments,
         commentaries: []
+      }
+    } else {
+      return output = {
+        id: postWithCommentaryInstanced[0].getPostCreator()?.id,
+        creatorName: postWithCommentaryInstanced[0].getPostCreator()?.name,
+        content: postWithCommentaryInstanced[0].getPostCreator()?.content,
+        like: postWithCommentaryInstanced[0].getPostCreator()?.like,
+        dislike: postWithCommentaryInstanced[0].getPostCreator()?.dislike,
+        comments: postWithCommentaryInstanced[0].getPostCreator()?.comments,
+        commentaries: postWithCommentaryInstanced.map(commentary => ({
+          idCommentary: commentary.getId(),
+          creatorId: commentary.getCreatorId(),
+          creatorName: commentary.getCommentaryCreator(),
+          contentCommentary: commentary.getContent(),
+          likeCommentary: commentary.getLike(),
+          dislikeCommentary: commentary.getDislike()
+        }))
+      }
     }
-  }
-
-    const output: GetCommentaryByIdOutputDTO = postWithCommentaryModel
 
     return output
   };

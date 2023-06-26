@@ -1,8 +1,20 @@
+export enum POST_LIKE {
+  ALREADY_LIKED = "ALREADY LIKED",
+  ALREADY_DISLIKED = "ALREADY DISLIKED"
+}
+
+export interface likeDislikePostDB {
+  user_id: string,
+  post_id: string,
+  like: number
+}
+
 export interface PostsDB {
   id: string;
   creator_id: string;
   content: string;
   like: number;
+  dislike: number;
   comments: number;
   created_at: string;
   updated_at: string;
@@ -15,6 +27,7 @@ export interface PostsWithCreatorNameDB {
   creator_id: string;
   content: string;
   like: number;
+  dislike: number;
   comments: number;
   created_at: string;
   updated_at: string;
@@ -26,6 +39,7 @@ export interface PostsWithCreatorNameModel {
   name: string;
   content: string;
   like: number;
+  dislike: number;
   comments: number;
 }
 
@@ -35,6 +49,7 @@ export class Posts {
     private creatorId: string,
     private content: string,
     private like: number,
+    private dislike: number,
     private comments: number,
     private createdAt: string,
     private updatedAt: string,
@@ -47,6 +62,7 @@ export class Posts {
       creator_id: this.creatorId,
       content: this.content,
       like: this.like,
+      dislike: this.dislike,
       comments: this.comments,
       created_at: this.createdAt,
       updated_at: this.updatedAt,
@@ -59,7 +75,13 @@ export class Posts {
       name: this.name,
       content: this.content,
       like: this.like,
+      dislike: this.dislike,
       comments: this.comments,
     };
   }
+  
+  public addLike = () => this.like++
+  public addDislike = () => this.dislike++
+  public removeLike = () => this.like--
+  public removeDislike = () => this.dislike--
 }

@@ -17,3 +17,4 @@ const postsController = new PostsController(
 
 postsRouter.get("/", postsController.getPosts)
 postsRouter.post("/", postsController.createPost)
+postsRouter.put("/:id/like", postsController.likeDislikePost)

@@ -4,6 +4,7 @@ import { CreatePostScheama } from "../dtos/posts/createPost.dto"
 import { ZodError } from "zod"
 import { BaseError } from "../errors/BaseError"
 import { GetPostsScheama } from "../dtos/posts/getPosts.dto";
+import { likeDislikePostScheama } from "../dtos/posts/likeDislike.dto";
 
 export class PostsController {
     constructor(
@@ -53,5 +54,17 @@ export class PostsController {
           res.status(500).send("Erro inesperado")
         }
       }     
+    }
+
+    public likeDislikePost = async (req: Request, res: Response) => {
+      const input = likeDislikePostScheama.parse({
+        token: req.headers.authorization,
+        idToLikeDislike: req.params.id,
+        like: req.body.like
+      })
+
+      const output = await this.postsBusiness.likeDislikePost(input)
+
+      res.status(200).send(output)
     }
 }
