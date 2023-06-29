@@ -59,7 +59,7 @@ export class PostsController {
     public likeDislikePost = async (req: Request, res: Response) => {
       const input = likeDislikePostScheama.parse({
         token: req.headers.authorization,
-        idToLikeDislike: req.params.id,
+        idPostToLikeDislike: req.params.id,
         like: req.body.like
       })
 

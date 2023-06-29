@@ -100,7 +100,7 @@ export class PostsBusiness {
   };
 
   public likeDislikePost = async (input: likeDislikePostInputDTO): Promise<likeDislikePostOutputDTO> => {
-    const { token, idToLikeDislike, like } = input;
+    const { token, idPostToLikeDislike, like } = input;
 
     const payload = this.tokenManager.getPayload(token);
 
@@ -109,7 +109,7 @@ export class PostsBusiness {
     }
 
     const postDB = await this.postsDatabase.getPostWithCreatorNameById(
-      idToLikeDislike
+      idPostToLikeDislike
     );
 
     if (!postDB) {

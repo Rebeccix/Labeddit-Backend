@@ -3,14 +3,21 @@ import {
   CreateCommentaryPostInputDTO,
   CreateCommentaryPostOutputDTO,
 } from "../dtos/commentary/createCommentary.dto";
-import { GetCommentaryByIdInputDTO, GetCommentaryByIdOutputDTO } from "../dtos/commentary/getCommentaryById.dto";
+import {
+  GetCommentaryByIdInputDTO,
+  GetCommentaryByIdOutputDTO,
+} from "../dtos/commentary/getCommentaryById.dto";
+import { likeDislikeCommentaryInputDTO, likeDislikeCommentaryOutputDTO } from "../dtos/commentary/likeDislikeCommentary.dto";
 import { BadRequestError } from "../errors/BadRequestError";
+import { NotFoundError } from "../errors/NotFoundError";
 import { UnauthorizedError } from "../errors/UnauthorizedError";
 import {
+  COMMENTARY_LIKE,
   Commentary,
   CommentaryDB,
   PostWihCommentModel,
   PostWithCommentsDB,
+  likeDislikeCommentaryDB,
 } from "../models/Commentary";
 import { PostsWithCreatorNameModel } from "../models/Posts";
 import { IdGenerator } from "../services/IdGenerator";
@@ -58,8 +65,8 @@ export class CommentaryBusiness {
 
     return output;
   };
-  // : Promise<GetCommentaryByIdOutputDTO> 
-  public getCommentaryById = async (input: GetCommentaryByIdInputDTO) => {
+
+  public getCommentaryById = async (input: GetCommentaryByIdInputDTO) : Promise<GetCommentaryByIdOutputDTO> => {
     const { token, id } = input;
 
     const payload = this.tokenManager.getPayload(token);
@@ -90,43 +97,109 @@ export class CommentaryBusiness {
         data.dislike_commentary,
         new Date().toISOString(),
         data.commentary_creator_name,
-        postCreator,
+        postCreator
       );
 
       return CommentaryWithPostCreator;
-    })
+    });
 
-let output: PostWihCommentModel
+    const output: GetCommentaryByIdOutputDTO =
+      postWithCommentaryInstanced[0].getId() === undefined
+        ? {
+            id: postWithCommentaryInstanced[0].getPostCreator()?.id,
+            creatorName: postWithCommentaryInstanced[0].getPostCreator()?.name,
+            content: postWithCommentaryInstanced[0].getPostCreator()?.content,
+            like: postWithCommentaryInstanced[0].getPostCreator()?.like,
+            dislike: postWithCommentaryInstanced[0].getPostCreator()?.dislike,
+            comments: postWithCommentaryInstanced[0].getPostCreator()?.comments,
+            commentaries: [],
+          }
+        : {
+            id: postWithCommentaryInstanced[0].getPostCreator()?.id,
+            creatorName: postWithCommentaryInstanced[0].getPostCreator()?.name,
+            content: postWithCommentaryInstanced[0].getPostCreator()?.content,
+            like: postWithCommentaryInstanced[0].getPostCreator()?.like,
+            dislike: postWithCommentaryInstanced[0].getPostCreator()?.dislike,
+            comments: postWithCommentaryInstanced[0].getPostCreator()?.comments,
+            commentaries: postWithCommentaryInstanced.map((commentary) => ({
+              idCommentary: commentary.getId(),
+              creatorId: commentary.getCreatorId(),
+              creatorName: commentary.getCommentaryCreator(),
+              contentCommentary: commentary.getContent(),
+              likeCommentary: commentary.getLike(),
+              dislikeCommentary: commentary.getDislike(),
+            })),
+          };
 
-    if(!postWithCommentaryInstanced[0].getId()) {
-      return output = {
-        id: postWithCommentaryInstanced[0].getPostCreator()?.id,
-        creatorName: postWithCommentaryInstanced[0].getPostCreator()?.name,
-        content: postWithCommentaryInstanced[0].getPostCreator()?.content,
-        like: postWithCommentaryInstanced[0].getPostCreator()?.like,
-        dislike: postWithCommentaryInstanced[0].getPostCreator()?.dislike,
-        comments: postWithCommentaryInstanced[0].getPostCreator()?.comments,
-        commentaries: []
-      }
-    } else {
-      return output = {
-        id: postWithCommentaryInstanced[0].getPostCreator()?.id,
-        creatorName: postWithCommentaryInstanced[0].getPostCreator()?.name,
-        content: postWithCommentaryInstanced[0].getPostCreator()?.content,
-        like: postWithCommentaryInstanced[0].getPostCreator()?.like,
-        dislike: postWithCommentaryInstanced[0].getPostCreator()?.dislike,
-        comments: postWithCommentaryInstanced[0].getPostCreator()?.comments,
-        commentaries: postWithCommentaryInstanced.map(commentary => ({
-          idCommentary: commentary.getId(),
-          creatorId: commentary.getCreatorId(),
-          creatorName: commentary.getCommentaryCreator(),
-          contentCommentary: commentary.getContent(),
-          likeCommentary: commentary.getLike(),
-          dislikeCommentary: commentary.getDislike()
-        }))
-      }
+    return output;
+  };
+
+  public likeDislikeCommentary = async (
+    input: likeDislikeCommentaryInputDTO
+  ): Promise<likeDislikeCommentaryOutputDTO> => {
+    const { token, idCommentaryToLikeDislike, likeOrDislike } = input;
+
+    const payload = this.tokenManager.getPayload(token);
+
+    if (!payload) {
+      throw new UnauthorizedError("Token inválido");
     }
 
+    const commentaryDB = await this.commentaryDatabase.GetCommentaryWithCreatorInfoById(idCommentaryToLikeDislike)
+
+    if(!commentaryDB) {
+      throw new NotFoundError("Commentario não existe")
+    }
+
+    const commentary = new Commentary (
+      commentaryDB.id,
+      commentaryDB.creator_id,
+      commentaryDB.post_id,
+      commentaryDB.content,
+      commentaryDB.like,
+      commentaryDB.dislike,
+      commentaryDB.created_at,
+      commentaryDB.name
+    )
+
+    const like = likeOrDislike ? 1 : 0
+
+    const likeDislikeCommentaryDB: likeDislikeCommentaryDB = {
+      user_id: payload.id,
+      commentary_id: commentaryDB.id,
+      like: like
+    }
+
+    const likeDislikeExist = await this.commentaryDatabase.findLikeDislike(likeDislikeCommentaryDB)
+
+    if(likeDislikeExist === COMMENTARY_LIKE.ALREADY_LIKED){
+      if(likeOrDislike) {
+        await this.commentaryDatabase.removeLikeDislike(likeDislikeCommentaryDB)
+        commentary.removeLike()
+      } else {
+        await this.commentaryDatabase.updateLikeDislike(likeDislikeCommentaryDB)
+        commentary.removeLike()
+        commentary.addDislike()
+      }
+    } else if (likeDislikeExist === COMMENTARY_LIKE.ALREADY_DISLIKED) {
+      if(!likeOrDislike) {
+        await this.commentaryDatabase.removeLikeDislike(likeDislikeCommentaryDB)
+        commentary.removeDislike()
+      } else {
+        await this.commentaryDatabase.updateLikeDislike(likeDislikeCommentaryDB)
+        commentary.removeDislike()
+        commentary.addLike()
+      }
+    } else {
+      await this.commentaryDatabase.insertLikeDislike(likeDislikeCommentaryDB)
+      likeOrDislike ? commentary.addLike() : commentary.addDislike()
+    }
+
+    const updatedCommentaryDB = commentary.toCommentaryDB()
+    await this.commentaryDatabase.updateCommentary(updatedCommentaryDB)
+
+    const output = undefined
+
     return output
-  };
+  }
 }

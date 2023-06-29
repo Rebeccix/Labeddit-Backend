@@ -6,11 +6,11 @@ export interface GetCommentaryByIdInputDTO {
 }
 
 export interface CommentDTO {
-    idCommentary: string;
-    creatorId: string;
+    idCommentary?: string;
+    creatorId?: string;
     commentaryCreatorName?: string;
-    contentCommentary: string;
-    likeCommentary: number;
+    contentCommentary?: string;
+    likeCommentary?: number;
 }
 
 export interface GetCommentaryByIdOutputDTO {
@@ -18,8 +18,9 @@ export interface GetCommentaryByIdOutputDTO {
   creatorName?: string;
   content?: string;
   like?: number;
+  dislike?: number;
   comments?: number;
-  commentaries: CommentDTO[];
+  commentaries?: CommentDTO[];
 }
 
 export const GetCommentaryByIdScheama = z

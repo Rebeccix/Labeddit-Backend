@@ -1,5 +1,16 @@
 import { PostsWithCreatorNameModel } from "../models/Posts";
 
+export enum COMMENTARY_LIKE {
+  ALREADY_LIKED = "ALREADY LIKED",
+  ALREADY_DISLIKED = "ALREADY DISLIKED"
+}
+
+export interface likeDislikeCommentaryDB {
+  user_id: string,
+  commentary_id: string,
+  like: number
+}
+
 export interface CommentaryDB {
   id: string;
   creator_id: string;
@@ -11,6 +22,17 @@ export interface CommentaryDB {
 }
 
 export interface CommentaryModel {}
+
+export interface CommentaryWithUserInfoDB {
+  id: string,
+  creator_id: string, 
+  post_id: string,
+  content: string,
+  like: number,
+  dislike: number,
+  created_at: string,
+  name: string,
+}
 
 export interface CommentaryWithPostInfoDB {
   id: string;
@@ -48,18 +70,18 @@ export interface PostWithCommentsDB {
 export interface CommentsModel {
   idCommentary: string;
   creatorId: string;
-  commentaryCreatorName?: string;
+  commentaryCreatorName: string;
   contentCommentary: string;
   likeCommentary: number;
 }
 
 export interface PostWihCommentModel {
-  id?: string;
-  creatorName?: string;
-  content?: string;
-  like?: number;
-  dislike?: number;
-  comments?: number;
+  id: string;
+  creatorName: string;
+  content: string;
+  like: number;
+  dislike: number;
+  comments: number;
   commentaries: CommentsModel[];
 }
 
@@ -111,6 +133,11 @@ export class Commentary {
   getPostCreator(): PostsWithCreatorNameModel | undefined {
     return this.postCreator;
   }
+
+  public addLike = () => this.like++
+  public addDislike = () => this.dislike++
+  public removeLike = () => this.like--
+  public removeDislike = () => this.dislike--
 
   public toCommentaryDB(): CommentaryDB {
     return {

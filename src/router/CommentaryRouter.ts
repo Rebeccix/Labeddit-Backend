@@ -17,3 +17,4 @@ const commentaryController = new CommentaryController(
 
 commentaryRouter.get("/:id", commentaryController.getCommentaryById)
 commentaryRouter.post("/:id", commentaryController.createCommentary)
+commentaryRouter.put("/:id/like", commentaryController.likeDislikeCommentary)
