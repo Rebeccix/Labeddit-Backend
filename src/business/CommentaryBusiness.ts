@@ -7,7 +7,10 @@ import {
   GetCommentaryByIdInputDTO,
   GetCommentaryByIdOutputDTO,
 } from "../dtos/commentary/getCommentaryById.dto";
-import { likeDislikeCommentaryInputDTO, likeDislikeCommentaryOutputDTO } from "../dtos/commentary/likeDislikeCommentary.dto";
+import {
+  likeDislikeCommentaryInputDTO,
+  likeDislikeCommentaryOutputDTO,
+} from "../dtos/commentary/likeDislikeCommentary.dto";
 import { BadRequestError } from "../errors/BadRequestError";
 import { NotFoundError } from "../errors/NotFoundError";
 import { UnauthorizedError } from "../errors/UnauthorizedError";
@@ -60,13 +63,16 @@ export class CommentaryBusiness {
     ).toCommentaryDB();
 
     await this.commentaryDatabase.insertCommentary(commentaryDB);
+    await this.commentaryDatabase.updatePostCommentNumber(postFound.id)
 
     const output: undefined = undefined;
 
     return output;
   };
 
-  public getCommentaryById = async (input: GetCommentaryByIdInputDTO) : Promise<GetCommentaryByIdOutputDTO> => {
+  public getCommentaryById = async (
+    input: GetCommentaryByIdInputDTO
+  ): Promise<GetCommentaryByIdOutputDTO> => {
     const { token, id } = input;
 
     const payload = this.tokenManager.getPayload(token);
@@ -145,13 +151,16 @@ export class CommentaryBusiness {
       throw new UnauthorizedError("Token inválido");
     }
 
-    const commentaryDB = await this.commentaryDatabase.GetCommentaryWithCreatorInfoById(idCommentaryToLikeDislike)
+    const commentaryDB =
+      await this.commentaryDatabase.GetCommentaryWithCreatorInfoById(
+        idCommentaryToLikeDislike
+      );
 
-    if(!commentaryDB) {
-      throw new NotFoundError("Commentario não existe")
+    if (!commentaryDB) {
+      throw new NotFoundError("Commentario não existe");
     }
 
-    const commentary = new Commentary (
+    const commentary = new Commentary(
       commentaryDB.id,
       commentaryDB.creator_id,
       commentaryDB.post_id,
@@ -160,46 +169,56 @@ export class CommentaryBusiness {
       commentaryDB.dislike,
       commentaryDB.created_at,
       commentaryDB.name
-    )
+    );
 
-    const like = likeOrDislike ? 1 : 0
+    const like = likeOrDislike ? 1 : 0;
 
     const likeDislikeCommentaryDB: likeDislikeCommentaryDB = {
       user_id: payload.id,
       commentary_id: commentaryDB.id,
-      like: like
-    }
+      like: like,
+    };
 
-    const likeDislikeExist = await this.commentaryDatabase.findLikeDislike(likeDislikeCommentaryDB)
+    const likeDislikeExist = await this.commentaryDatabase.findLikeDislike(
+      likeDislikeCommentaryDB
+    );
 
-    if(likeDislikeExist === COMMENTARY_LIKE.ALREADY_LIKED){
-      if(likeOrDislike) {
-        await this.commentaryDatabase.removeLikeDislike(likeDislikeCommentaryDB)
-        commentary.removeLike()
+    if (likeDislikeExist === COMMENTARY_LIKE.ALREADY_LIKED) {
+      if (likeOrDislike) {
+        await this.commentaryDatabase.removeLikeDislike(
+          likeDislikeCommentaryDB
+        );
+        commentary.removeLike();
       } else {
-        await this.commentaryDatabase.updateLikeDislike(likeDislikeCommentaryDB)
-        commentary.removeLike()
-        commentary.addDislike()
+        await this.commentaryDatabase.updateLikeDislike(
+          likeDislikeCommentaryDB
+        );
+        commentary.removeLike();
+        commentary.addDislike();
       }
     } else if (likeDislikeExist === COMMENTARY_LIKE.ALREADY_DISLIKED) {
-      if(!likeOrDislike) {
-        await this.commentaryDatabase.removeLikeDislike(likeDislikeCommentaryDB)
-        commentary.removeDislike()
+      if (!likeOrDislike) {
+        await this.commentaryDatabase.removeLikeDislike(
+          likeDislikeCommentaryDB
+        );
+        commentary.removeDislike();
       } else {
-        await this.commentaryDatabase.updateLikeDislike(likeDislikeCommentaryDB)
-        commentary.removeDislike()
-        commentary.addLike()
+        await this.commentaryDatabase.updateLikeDislike(
+          likeDislikeCommentaryDB
+        );
+        commentary.removeDislike();
+        commentary.addLike();
       }
     } else {
-      await this.commentaryDatabase.insertLikeDislike(likeDislikeCommentaryDB)
-      likeOrDislike ? commentary.addLike() : commentary.addDislike()
+      await this.commentaryDatabase.insertLikeDislike(likeDislikeCommentaryDB);
+      likeOrDislike ? commentary.addLike() : commentary.addDislike();
     }
 
-    const updatedCommentaryDB = commentary.toCommentaryDB()
-    await this.commentaryDatabase.updateCommentary(updatedCommentaryDB)
+    const updatedCommentaryDB = commentary.toCommentaryDB();
+    await this.commentaryDatabase.updateCommentary(updatedCommentaryDB);
 
-    const output = undefined
+    const output = undefined;
 
-    return output
-  }
+    return output;
+  };
 }

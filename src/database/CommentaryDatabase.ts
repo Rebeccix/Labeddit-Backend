@@ -145,4 +145,10 @@ export class CommentaryDatabase extends BaseDatabase {
     .update(commentary)
     .where({id: commentary.id})
   }
+
+  public updatePostCommentNumber = async (id: string): Promise<void> => {
+    await BaseDatabase.connection(CommentaryDatabase.TABLE_POSTS)
+    .where({id})
+    .increment('comments', 1)
+  }
 }

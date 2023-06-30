@@ -3,7 +3,7 @@ import { ZodError } from "zod";
 import { Request, Response } from "express";
 import { BaseError } from "../errors/BaseError";
 import { SignupSchema } from "../dtos/user/signup.dto";
-import { LoginScheama } from "../dtos/user/login.dto";
+import { LoginSchema } from "../dtos/user/login.dto";
 
 export class UserController {
     constructor(
@@ -13,16 +13,17 @@ export class UserController {
     public signup = async (req: Request, res: Response) => {
         try {
             const input = SignupSchema.parse({
-                name: req.body.name,
+                name: req.body.nickname,
                 email: req.body.email,
                 password: req.body.password
             })
-
+            
             const output = await this.userBusiness.signup(input)
 
             res.status(201).send(output)
             
         } catch (error) {
+
             console.log(error)
 
             if (error instanceof ZodError) {
@@ -37,7 +38,7 @@ export class UserController {
 
     public login = async (req: Request, res: Response) => {
         try {
-            const input = LoginScheama.parse({
+            const input = LoginSchema.parse({
                 email: req.body.email,
                 password: req.body.password 
             }) 
