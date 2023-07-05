@@ -33,6 +33,12 @@ export class UserBusiness {
 
             const userDB = user.toUserDBModel()
 
+            const userDBFound = await this.userDatabase.findUserByEmail(email)
+
+            if(userDBFound !== undefined && userDBFound.email === email) {
+                throw new BadRequestError("Email já existe")
+            }
+
             await this.userDatabase.insertUser(userDB)
 
             const payload: TokenPayload = {

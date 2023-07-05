@@ -1,4 +1,3 @@
-import { promises } from "dns";
 import {
   POST_LIKE,
   PostsDB,
@@ -18,10 +17,11 @@ export class PostsDatabase extends BaseDatabase {
 
   public findPostByCreatorId = async (
     creatorId: string
-  ): Promise<PostsDB[]> => {
+  ): Promise<PostsDB[] | undefined> => {
     const result: Array<PostsDB> | undefined = await BaseDatabase.connection(
       PostsDatabase.TABLE_POST
     ).where("creator_id", creatorId);
+console.log(result);
 
     return result;
   };

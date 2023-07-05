@@ -4,7 +4,7 @@ export class TokenManagerMock {
     public createToken = (payload: TokenPayload): string => {
         if(payload.id === "id-mock"){
             return "token-mock"
-        } else if (payload.id === "hash-mock-becca") {
+        } else if (payload.id === "id-mock-becca") {
             return "token-mock-becca"
         } else {
             return "token-mock-admin"

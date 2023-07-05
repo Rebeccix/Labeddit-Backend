@@ -18,8 +18,6 @@ import {
   COMMENTARY_LIKE,
   Commentary,
   CommentaryDB,
-  PostWihCommentModel,
-  PostWithCommentsDB,
   likeDislikeCommentaryDB,
 } from "../models/Commentary";
 import { PostsWithCreatorNameModel } from "../models/Posts";
@@ -63,7 +61,7 @@ export class CommentaryBusiness {
     ).toCommentaryDB();
 
     await this.commentaryDatabase.insertCommentary(commentaryDB);
-    await this.commentaryDatabase.updatePostCommentNumber(postFound.id)
+    await this.commentaryDatabase.updatePostCommentNumber(postFound.id);
 
     const output: undefined = undefined;
 
@@ -109,6 +107,7 @@ export class CommentaryBusiness {
       return CommentaryWithPostCreator;
     });
 
+
     const output: GetCommentaryByIdOutputDTO =
       postWithCommentaryInstanced[0].getId() === undefined
         ? {
@@ -135,8 +134,8 @@ export class CommentaryBusiness {
               likeCommentary: commentary.getLike(),
               dislikeCommentary: commentary.getDislike(),
             })),
-          };
-
+          };      
+  
     return output;
   };
 

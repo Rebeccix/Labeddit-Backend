@@ -8,7 +8,7 @@ export class UserDatabase extends BaseDatabase {
         await BaseDatabase.connection(UserDatabase.TABLE_USER).insert(UserDB)
     }
 
-    public findUserByEmail = async (email: string): Promise<UserDB> => {
+    public findUserByEmail = async (email: string): Promise<UserDB | undefined> => {
         const [result]: UserDB[] | undefined =  await BaseDatabase.connection(UserDatabase.TABLE_USER).where({email})
 
         return result

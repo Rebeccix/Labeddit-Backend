@@ -13,7 +13,7 @@ export class UserController {
     public signup = async (req: Request, res: Response) => {
         try {
             const input = SignupSchema.parse({
-                name: req.body.nickname,
+                name: req.body.name,
                 email: req.body.email,
                 password: req.body.password
             })

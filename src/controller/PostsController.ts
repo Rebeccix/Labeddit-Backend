@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import { PostsBusiness } from "../business/PostsBusiness";
-import { CreatePostScheama } from "../dtos/posts/createPost.dto"
+import { CreatePostSchema } from "../dtos/posts/createPost.dto"
 import { ZodError } from "zod"
 import { BaseError } from "../errors/BaseError"
-import { GetPostsScheama } from "../dtos/posts/getPosts.dto";
-import { likeDislikePostScheama } from "../dtos/posts/likeDislike.dto";
+import { GetPostsSchema } from "../dtos/posts/getPosts.dto";
+import { likeDislikePostSchema } from "../dtos/posts/likeDislike.dto";
 
 export class PostsController {
     constructor(
@@ -13,7 +13,7 @@ export class PostsController {
 
     public createPost = async (req: Request, res: Response) => {
         try {
-            const input = CreatePostScheama.parse({
+            const input = CreatePostSchema.parse({
                 token: req.headers.authorization,
                 content: req.body.content
             })
@@ -36,7 +36,7 @@ export class PostsController {
 
     public getPosts = async (req: Request, res: Response) => {
       try {
-        const input = GetPostsScheama.parse({
+        const input = GetPostsSchema.parse({
           token: req.headers.authorization
         })
 
@@ -58,7 +58,7 @@ export class PostsController {
 
     public likeDislikePost = async (req: Request, res: Response) => {
       try {
-        const input = likeDislikePostScheama.parse({
+        const input = likeDislikePostSchema.parse({
           token: req.headers.authorization,
           idPostToLikeDislike: req.params.id,
           like: req.body.like

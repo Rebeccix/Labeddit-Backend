@@ -5,7 +5,7 @@ const usersMock: UserDB[] = [
   {
     id: "id-mock-becca",
     name: "becca",
-    email: "becca@gmail.com",
+    email: "becca@email.com",
     password: "hash-mock-becca",
     role: USER_ROLES.NORMAL,
     created_at: new Date().toISOString(),
@@ -13,7 +13,7 @@ const usersMock: UserDB[] = [
   {
     id: "id-mock-admin",
     name: "admin",
-    email: "admin@gmail.com",
+    email: "admin@email.com",
     password: "hash-mock-admin",
     role: USER_ROLES.ADMIN,
     created_at: new Date().toISOString(),
@@ -27,7 +27,9 @@ export class UserDatabaseMock extends BaseDatabase {
 
   };
 
-  public findUserByEmail = async (email: string): Promise<UserDB> => {
-    return usersMock.filter(user => user.email === email)[0]
-  };
+  public findUserByEmail = async (email: string): Promise<UserDB | undefined> => {
+    const result = usersMock.filter(user => user.email === email)[0]
+    
+    return result
+  }
 }

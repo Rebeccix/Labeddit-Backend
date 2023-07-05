@@ -13,7 +13,7 @@ export interface GetPostsOutputDTO {
   comments: number;
 }
 
-export const GetPostsScheama = z
+export const GetPostsSchema = z
   .object({
     token: z.string().min(1),
   })

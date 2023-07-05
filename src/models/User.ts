@@ -46,16 +46,6 @@ export class User {
             created_at: this.createdAt
         }
     }
-    
-    public toUserModel(): UserModel {
-        return {
-            id: this.id,
-            name: this.name, 
-            email: this.email,
-            role: this.role,
-            createdAt: this.createdAt 
-        }
-    }
 
     public getId = (): string => this.id
     

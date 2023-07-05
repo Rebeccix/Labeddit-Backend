@@ -71,7 +71,7 @@ export class PostsBusiness {
 
   public getPosts = async (input: GetPostsInputDTO): Promise<GetPostsOutputDTO[]> => {
     const { token } = input;
-
+    
     const payload = this.tokenManager.getPayload(token);
 
     if (!payload) {
@@ -93,7 +93,7 @@ export class PostsBusiness {
         data.name
       ).toPostsModelWithNameModel();
     });
-
+    
     const output: GetPostsOutputDTO[] = postModel;
 
     return output;
