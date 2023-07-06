@@ -107,7 +107,6 @@ export class CommentaryBusiness {
       return CommentaryWithPostCreator;
     });
 
-
     const output: GetCommentaryByIdOutputDTO =
       postWithCommentaryInstanced[0].getId() === undefined
         ? {
@@ -147,7 +146,7 @@ export class CommentaryBusiness {
     const payload = this.tokenManager.getPayload(token);
 
     if (!payload) {
-      throw new UnauthorizedError("Token inválido");
+      throw new UnauthorizedError();
     }
 
     const commentaryDB =
@@ -156,7 +155,7 @@ export class CommentaryBusiness {
       );
 
     if (!commentaryDB) {
-      throw new NotFoundError("Commentario não existe");
+      throw new NotFoundError("Comentario não existe");
     }
 
     const commentary = new Commentary(

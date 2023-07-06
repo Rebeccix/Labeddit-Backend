@@ -79,6 +79,14 @@ const commentaryMock: CommentaryDB[] = [
     like: -2,
     dislike: -1,
     created_at: new Date().toISOString(),
+  },{
+    id: "c003",
+    creator_id: "id-mock-becca",
+    post_id: "p001",
+    content: "content test tres",
+    like: 1,
+    dislike: 4,
+    created_at: new Date().toISOString(),
   },
 ];
 
@@ -91,8 +99,8 @@ const likeDislikeCommentaryMock: likeDislikeCommentaryDB[] = [
   {
     user_id: "id-mock-becca",
     commentary_id: "c001",
-    like: 1
-  },
+    like: 0
+  }
 ]
 
 export class CommentaryDatabaseMock extends BaseDatabase {
@@ -171,9 +179,8 @@ export class CommentaryDatabaseMock extends BaseDatabase {
         name: user.name
       }
     })
- 
-    const [result] = commentaryWithUserInfo.filter(data => commentaryWithUserInfo[0].id === id)
-    console.log(result);
+    
+    const [result] = commentaryWithUserInfo.filter(data => data.id === id)
     
     return result;
   };

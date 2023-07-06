@@ -106,9 +106,9 @@ export class Commentary {
     return this.creatorId;
   }
 
-  getPostId(): string {
-    return this.postId;
-  }
+  // getPostId(): string {
+  //   return this.postId;
+  // }
 
   getContent(): string {
     return this.content;
@@ -122,9 +122,9 @@ export class Commentary {
     return this.dislike;
   }
 
-  getCreatedAt(): string {
-    return this.createdAt;
-  }
+  // getCreatedAt(): string {
+  //   return this.createdAt;
+  // }
 
   getCommentaryCreator(): string | undefined {
     return this.commentaryCreator;
