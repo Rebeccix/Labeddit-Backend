@@ -70,7 +70,7 @@ describe("Testando delete do post", () => {
     } catch (error) {
       if (error instanceof ForbiddenError) {
         expect(error.message).toBe(
-          "Token válido, mas sem permissões suficientes"
+          "Somente quem criou o post pode apagar"
         );
       }
     }

@@ -1,5 +1,6 @@
 import { CommentaryBusiness } from "../../../src/business/CommentaryBusiness"
 import { deleteCommentarySchema } from "../../../src/dtos/commentary/deleteCommentary.dto"
+import { ForbiddenError } from "../../../src/errors/ForbidenError"
 import { NotFoundError } from "../../../src/errors/NotFoundError"
 import { UnauthorizedError } from "../../../src/errors/UnauthorizedError"
 import { CommentaryDatabaseMock } from "../../mocks/CommentaryDatabaseMock"
@@ -59,6 +60,24 @@ describe("Testando delete commentary", () => {
                 }
             }
         })
+
+        test("Retorna erro caso token não seja um admin e nem o criador do post", async () => {
+            expect.assertions(1);
+            try {
+              const input = deleteCommentarySchema.parse({
+                token: "token-mock-becca",
+                id: "c002",
+              });
+        
+              await commentaryBusiness.deleteCommentaryById(input);
+            } catch (error) {
+              if (error instanceof ForbiddenError) {
+                expect(error.message).toBe(
+                  "Somente quem criou o comentário pode apagar"
+                );
+              }
+            }
+          });
 
         test("Retorna erro caso token esteja vazio", async () => {
             expect.assertions(1)

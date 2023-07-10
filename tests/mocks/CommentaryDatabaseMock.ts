@@ -231,7 +231,7 @@ export class CommentaryDatabaseMock extends BaseDatabase {
   };
 
   public deleteCommentary = async (
-    commentaryExist: CommentaryDB
-  ): Promise<void> => {
+    id: string
+      ): Promise<void> => {
   };
 }

@@ -241,7 +241,7 @@ export class CommentaryBusiness {
 
   if (payload.role !== USER_ROLES.ADMIN) {
     if (commentaryExist.creator_id !== payload.id) {
-      throw new ForbiddenError();
+      throw new ForbiddenError("Somente quem criou o comentário pode apagar");
     }
   }
 

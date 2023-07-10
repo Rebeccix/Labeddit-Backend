@@ -204,7 +204,7 @@ export class PostsBusiness {
 
     if (payload.role !== USER_ROLES.ADMIN) {
       if (postExist.creator_id !== payload.id) {
-        throw new ForbiddenError();
+        throw new ForbiddenError("Somente quem criou o post pode apagar");
       }
     }
 
