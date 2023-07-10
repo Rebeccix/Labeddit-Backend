@@ -60,7 +60,7 @@ describe("Testando Signup", () => {
     } catch (error) {
       if (error instanceof ZodError) {
         expect(error.issues[0].message).toBe(
-          "String must contain at least 3 character(s)"
+          "'name' deve possuir no mínimo 3 caracteres"
         );
       }
     }
@@ -77,7 +77,9 @@ describe("Testando Signup", () => {
       });
     } catch (error) {
       if (error instanceof ZodError) {
-        expect(error.issues[0].message).toBe("Invalid email");
+        expect(error.issues[0].message).toBe(
+          "'email' inválido"
+          );
       }
     }
   });
@@ -94,7 +96,7 @@ describe("Testando Signup", () => {
     } catch (error) {
       if (error instanceof ZodError) {
         expect(error.issues[0].message).toBe(
-          "String must contain at least 4 character(s)"
+          "'password' deve possuir no mínimo 4 caracteres"
         );
       }
     }

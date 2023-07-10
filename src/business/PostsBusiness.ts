@@ -4,14 +4,24 @@ import {
   CreatePostOutputDTO,
 } from "../dtos/posts/createPost.dto";
 import {
+  deletePostInput,
+  deletePostOutput,
+} from "../dtos/posts/deletePost.dto";
+import {
   GetPostsInputDTO,
   GetPostsOutputDTO,
 } from "../dtos/posts/getPosts.dto";
-import { likeDislikePostInputDTO, likeDislikePostOutputDTO } from "../dtos/posts/likeDislike.dto";
+import {
+  likeDislikePostInputDTO,
+  likeDislikePostOutputDTO,
+} from "../dtos/posts/likeDislike.dto";
 import { BadRequestError } from "../errors/BadRequestError";
 import { ConflictError } from "../errors/ConflictError";
+import { ForbiddenError } from "../errors/ForbidenError";
+import { NotFoundError } from "../errors/NotFoundError";
 import { UnauthorizedError } from "../errors/UnauthorizedError";
 import { POST_LIKE, Posts, likeDislikePostDB } from "../models/Posts";
+import { USER_ROLES } from "../models/User";
 import { IdGenerator } from "../services/IdGenerator";
 import { TokenManager } from "../services/TokenManager";
 
@@ -20,7 +30,7 @@ export class PostsBusiness {
     private postsDatabase: PostsDatabase,
     private idGenerator: IdGenerator,
     private tokenManager: TokenManager
-  ) { }
+  ) {}
 
   public createPost = async (
     input: CreatePostInputDTO
@@ -69,9 +79,11 @@ export class PostsBusiness {
     return output;
   };
 
-  public getPosts = async (input: GetPostsInputDTO): Promise<GetPostsOutputDTO[]> => {
+  public getPosts = async (
+    input: GetPostsInputDTO
+  ): Promise<GetPostsOutputDTO[]> => {
     const { token } = input;
-    
+
     const payload = this.tokenManager.getPayload(token);
 
     if (!payload) {
@@ -93,13 +105,15 @@ export class PostsBusiness {
         data.name
       ).toPostsModelWithNameModel();
     });
-    
+
     const output: GetPostsOutputDTO[] = postModel;
 
     return output;
   };
 
-  public likeDislikePost = async (input: likeDislikePostInputDTO): Promise<likeDislikePostOutputDTO> => {
+  public likeDislikePost = async (
+    input: likeDislikePostInputDTO
+  ): Promise<likeDislikePostOutputDTO> => {
     const { token, idPostToLikeDislike, like } = input;
 
     const payload = this.tokenManager.getPayload(token);
@@ -166,8 +180,38 @@ export class PostsBusiness {
     const updatedPostDB = post.toPostsDB();
     await this.postsDatabase.updatePost(updatedPostDB);
 
-    const output: likeDislikePostOutputDTO = undefined
+    const output: likeDislikePostOutputDTO = undefined;
 
-    return output
+    return output;
+  };
+
+  public deletePost = async (
+    input: deletePostInput
+  ): Promise<deletePostOutput> => {
+    const { token, id } = input;
+
+    const payload = this.tokenManager.getPayload(token);
+
+    if (!payload) {
+      throw new UnauthorizedError("Token inválido");
+    }
+
+    const postExist = await this.postsDatabase.getPostWithCreatorNameById(id);
+
+    if (postExist === undefined) {
+      throw new NotFoundError();
+    }
+
+    if (payload.role !== USER_ROLES.ADMIN) {
+      if (postExist.creator_id !== payload.id) {
+        throw new ForbiddenError();
+      }
+    }
+
+    await this.postsDatabase.deletePostById(postExist.id)
+
+    const output = undefined;
+
+    return output;
   };
 }

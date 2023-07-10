@@ -79,7 +79,8 @@ const commentaryMock: CommentaryDB[] = [
     like: -2,
     dislike: -1,
     created_at: new Date().toISOString(),
-  },{
+  },
+  {
     id: "c003",
     creator_id: "id-mock-becca",
     post_id: "p001",
@@ -94,14 +95,14 @@ const likeDislikeCommentaryMock: likeDislikeCommentaryDB[] = [
   {
     user_id: "id-mock-becca",
     commentary_id: "c002",
-    like: 1
-  },  
+    like: 1,
+  },
   {
     user_id: "id-mock-becca",
     commentary_id: "c001",
-    like: 0
-  }
-]
+    like: 0,
+  },
+];
 
 export class CommentaryDatabaseMock extends BaseDatabase {
   static TABLE_USERS = "users";
@@ -109,7 +110,7 @@ export class CommentaryDatabaseMock extends BaseDatabase {
   static TABLE_COMMENTARY = "commentary";
   static LIKES_DISLIKES_TABLE = "like_dislike_commentary";
 
-  public findPostById = async (id: string): Promise<PostsDB | undefined> => {
+  public findPostById = async (id: string): Promise<PostsDB> => {
     const [result] = postsMock.filter((data) => data.id === id);
 
     return result;
@@ -122,7 +123,6 @@ export class CommentaryDatabaseMock extends BaseDatabase {
   public findPostAndCommentaryById = async (
     id: string
   ): Promise<CommentaryWithPostInfoDB[] | any> => {
-   
     const PostWithAllInfo = postsMock.map((post) => {
       const [users] = usersMock.filter((user) => user.id === post.creator_id);
       const [commentaries] = commentaryMock.filter(
@@ -157,16 +157,17 @@ export class CommentaryDatabaseMock extends BaseDatabase {
     });
 
     const result = PostWithAllInfo.filter((data) => data.id === id);
-    
+
     return result;
   };
 
   public GetCommentaryWithCreatorInfoById = async (
     id: string
   ): Promise<CommentaryWithUserInfoDB> => {
-
-    const commentaryWithUserInfo = commentaryMock.map(commentary => {
-      const [user] = usersMock.filter(user => user.id === commentary.creator_id)
+    const commentaryWithUserInfo = commentaryMock.map((commentary) => {
+      const [user] = usersMock.filter(
+        (user) => user.id === commentary.creator_id
+      );
 
       return {
         id: commentary.id,
@@ -176,25 +177,25 @@ export class CommentaryDatabaseMock extends BaseDatabase {
         like: commentary.like,
         dislike: commentary.dislike,
         created_at: commentary.created_at,
-        name: user.name
-      }
-    })
-    
-    const [result] = commentaryWithUserInfo.filter(data => data.id === id)
-    
+        name: user.name,
+      };
+    });
+
+    const [result] = commentaryWithUserInfo.filter((data) => data.id === id);
+
     return result;
   };
 
   public findLikeDislike = async (
     likeDislikeCommentaryDB: likeDislikeCommentaryDB
   ): Promise<COMMENTARY_LIKE | undefined> => {
+    const result = likeDislikeCommentaryMock.find(
+      (data) =>
+        data.user_id === likeDislikeCommentaryDB.user_id &&
+        data.commentary_id === likeDislikeCommentaryDB.commentary_id
+    );
 
-    const result = likeDislikeCommentaryMock.find(data => 
-      data.user_id === likeDislikeCommentaryDB.user_id &&
-      data.commentary_id === likeDislikeCommentaryDB.commentary_id
-      )
-
-   if (result === undefined) {
+    if (result === undefined) {
       return undefined;
     } else if (result.like === 1) {
       return COMMENTARY_LIKE.ALREADY_LIKED;
@@ -219,5 +220,18 @@ export class CommentaryDatabaseMock extends BaseDatabase {
     commentary: CommentaryDB
   ): Promise<void> => {};
 
-  public updatePostCommentNumber = async (id: string): Promise<void> => {};
+  public incrementPostCommentNumber = async (id: string): Promise<void> => {};
+
+  public decrementPostCommentNumber = async (id: string): Promise<void> => {};
+
+  public findCommentaryById = async (id: string): Promise<CommentaryDB> => {
+    const [result] = commentaryMock.filter(data => data.id === id)
+
+    return result;
+  };
+
+  public deleteCommentary = async (
+    commentaryExist: CommentaryDB
+  ): Promise<void> => {
+  };
 }

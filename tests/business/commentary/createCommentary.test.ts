@@ -54,7 +54,7 @@ describe("Testando CreateCommentary", () => {
     } catch (error) {
       if (error instanceof ZodError) {
         expect(error.issues[0].message).toBe(
-          "String must contain at least 1 character(s)"
+          "'id' deve possuir no mínimo 1 caractere"
         );
       }
     }
@@ -71,7 +71,7 @@ describe("Testando CreateCommentary", () => {
     } catch (error) {
       if (error instanceof ZodError) {
         expect(error.issues[0].message).toBe(
-          "String must contain at least 1 character(s)"
+          "'comentário' deve possuir no mínimo 1 caractere"
         );
       }
     }
@@ -86,7 +86,7 @@ describe("Testando CreateCommentary", () => {
         content: "comentario teste um",
       });
 
-      await commentaryBusiness.createCommentary(input)
+      await commentaryBusiness.createCommentary(input);
     } catch (error) {
       if (error instanceof UnauthorizedError) {
         expect(error.message).toBe("Token inválido");
@@ -103,7 +103,7 @@ describe("Testando CreateCommentary", () => {
         id: "idError",
         content: "comentario teste um",
       });
-      await commentaryBusiness.createCommentary(input)
+      await commentaryBusiness.createCommentary(input);
     } catch (error) {
       if (error instanceof BadRequestError) {
         expect(error.message).toBe("Requisição inválida");
