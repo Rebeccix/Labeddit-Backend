@@ -33,16 +33,16 @@ Acessar a API do Labeddit em http://localhost:<PORTA>/, onde <PORTA> é a porta 
 
 ## Rotas da API
 
-- POST /signup: Rota para criar um novo usuário. Envie um JSON contendo name, email e password.
-- POST /login: Rota para realizar o login de um usuário existente. Envie um JSON contendo email e password.
-- GET /posts: Rota para obter todos os posts.
-- POST /posts: Rota para criar um novo post. Envie um JSON contendo content, além do token de autenticação no cabeçalho Authorization.
-- PUT /posts/:id/like: Rota para dar um like ou dislike do post. Envie um JSON contento idPostToLikeDislike e like, além do token de autenticação no cabeçalho Authorization.
+- `POST /signup`: Rota para criar um novo usuário. Envie um JSON contendo name, email e password.
+- `POST /login`: Rota para realizar o login de um usuário existente. Envie um JSON contendo email e password.
+- `GET /posts`: Rota para obter todos os posts.
+- `POST /posts`: Rota para criar um novo post. Envie um JSON contendo content, além do token de autenticação no cabeçalho Authorization.
+- `PUT /posts/:id/like`: Rota para dar um like ou dislike do post. Envie um JSON contento idPostToLikeDislike e like, além do token de autenticação no cabeçalho Authorization.
 - `DEL /posts/:id`: Rota para deletar post. Envie um JSON contento id, além do token de autenticação no cabeçalho Authorization.
-- GET /commentary/:id: Rota para obter todos os comentários de um post específico.
-- POST /commentary/:id: Rota para criar um novo comentários. Envie um JSON contendo content e id, além do token de autenticação no cabeçalho Authorization.
-- PUT /commentary/:id/like: Rota para dar um like ou dislike do comentários. Envie um JSON contento idCommentaryToLikeDislike e likeOrDislike, além do token de autenticação no cabeçalho Authorization.
-- DEL /commentary/:id: Rota para deletar comentários. Envie um JSON contento id, além do token de autenticação no cabeçalho Authorization.
+- `GET /commentary/:id`: Rota para obter todos os comentários de um post específico.
+- `POST /commentary/:id`: Rota para criar um novo comentários. Envie um JSON contendo content e id, além do token de autenticação no cabeçalho Authorization.
+- `PUT /commentary/:id/like`: Rota para dar um like ou dislike do comentários. Envie um JSON contento idCommentaryToLikeDislike e likeOrDislike, além do token de autenticação no cabeçalho Authorization.
+- `DEL /commentary/:id`: Rota para deletar comentários. Envie um JSON contento id, além do token de autenticação no cabeçalho Authorization.
 
 ## Contribuição
 
