@@ -29,7 +29,7 @@ npm install
 
 npm start
 
-Acessar a API do Labeddit em http://localhost:<PORTA>/, onde <PORTA> é a porta configurada no arquivo .env.
+Acessar a API do Labeddit em `http://localhost:<PORTA>/`, onde `<PORTA>` é a porta configurada no arquivo .env.
 
 ## Rotas da API
 
