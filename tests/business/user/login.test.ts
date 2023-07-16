@@ -46,7 +46,7 @@ describe("Testando Login", () => {
         })
     } catch (error) {
         if(error instanceof ZodError) {
-            expect(error.issues[0].message).toBe("Invalid email")
+            expect(error.issues[0].message).toBe("'email' inválido")
         }
     }
   })
@@ -60,7 +60,7 @@ describe("Testando Login", () => {
         })
     } catch (error) {
         if(error instanceof ZodError) {
-            expect(error.issues[0].message).toBe("Expected string, received number")
+            expect(error.issues[0].message).toBe("'email' deve ser do tipo string")
         }
     }
   })
@@ -74,7 +74,7 @@ describe("Testando Login", () => {
         })
     } catch (error) {
         if(error instanceof ZodError) {
-            expect(error.issues[0].message).toBe("String must contain at least 4 character(s)")
+            expect(error.issues[0].message).toBe("'password' deve possuir no mínimo 4 caracteres")
         }
     }
   })
@@ -88,7 +88,7 @@ describe("Testando Login", () => {
         })
     } catch (error) {
         if(error instanceof ZodError) {
-            expect(error.issues[0].message).toBe("Expected string, received number")
+            expect(error.issues[0].message).toBe("'password' deve ser do tipo string")
         }
     }
   })

@@ -83,7 +83,7 @@ describe("Testando CreatePost", () => {
             })
         } catch (error) {
             if(error instanceof ZodError){
-                expect(error.issues[0].message).toBe("String must contain at least 1 character(s)")
+                expect(error.issues[0].message).toBe("'post' deve possuir no mínimo 3 caractere")
             }
         }
     })

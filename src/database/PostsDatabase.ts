@@ -9,6 +9,7 @@ import { BaseDatabase } from "./BaseDatabase";
 export class PostsDatabase extends BaseDatabase {
   public static TABLE_POST = "posts";
   public static TABLE_USER = "users";
+  public static TABLE_COMMENTARY = "commentary";
   public static TABLE_LIKE_DISLIKE = "like_dislike_post";
 
   public insertPost = async (postDB: PostsDB): Promise<void> => {
@@ -21,7 +22,6 @@ export class PostsDatabase extends BaseDatabase {
     const result: Array<PostsDB> | undefined = await BaseDatabase.connection(
       PostsDatabase.TABLE_POST
     ).where("creator_id", creatorId);
-console.log(result);
 
     return result;
   };
@@ -142,5 +142,11 @@ console.log(result);
         user_id: likeDislikeDB.user_id,
         post_id: likeDislikeDB.post_id,
       });
+  };
+
+  public deletePostById = async (id: string): Promise<void> => {
+    await BaseDatabase.connection(PostsDatabase.TABLE_POST)
+      .delete()
+      .where({ id });
   };
 }

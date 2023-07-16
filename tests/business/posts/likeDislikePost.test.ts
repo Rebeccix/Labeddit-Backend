@@ -153,7 +153,7 @@ describe("Testando likeDislikePost", () => {
       });
     } catch (error) {
       if (error instanceof ZodError) {
-        expect(error.issues[0].message).toBe("String must contain at least 1 character(s)")
+        expect(error.issues[0].message).toBe("'id' deve possuir no mínimo 1 caracteres")
       }
     }
   });

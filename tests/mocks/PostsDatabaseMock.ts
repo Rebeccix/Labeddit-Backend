@@ -59,7 +59,7 @@ const likeDislikePostMock: likeDislikePostDB[] = [
     user_id: "id-mock-admin",
     post_id: "p001",
     like: -1,
-  }
+  },
 ];
 
 export class PostsDatabaseMock extends BaseDatabase {
@@ -81,9 +81,7 @@ export class PostsDatabaseMock extends BaseDatabase {
     PostsWithCreatorNameDB[]
   > => {
     const result = postsMock.map((post) => {
-      const creatorPost = usersMock.find(
-        (user) => user.id === post.creator_id
-      );
+      const creatorPost = usersMock.find((user) => user.id === post.creator_id);
 
       return {
         ...post,
@@ -147,4 +145,6 @@ export class PostsDatabaseMock extends BaseDatabase {
   public updateLikeDislikePost = async (
     likeDislikeDB: likeDislikePostDB
   ): Promise<void> => {};
+
+  public deletePostById = async (id: string): Promise<void> => {};
 }

@@ -3,6 +3,7 @@ import {
   CreateCommentaryPostInputDTO,
   CreateCommentaryPostOutputDTO,
 } from "../dtos/commentary/createCommentary.dto";
+import { deleteCommentaryInput, deleteCommentaryOutput } from "../dtos/commentary/deleteCommentary.dto";
 import {
   GetCommentaryByIdInputDTO,
   GetCommentaryByIdOutputDTO,
@@ -12,6 +13,7 @@ import {
   likeDislikeCommentaryOutputDTO,
 } from "../dtos/commentary/likeDislikeCommentary.dto";
 import { BadRequestError } from "../errors/BadRequestError";
+import { ForbiddenError } from "../errors/ForbidenError";
 import { NotFoundError } from "../errors/NotFoundError";
 import { UnauthorizedError } from "../errors/UnauthorizedError";
 import {
@@ -21,6 +23,7 @@ import {
   likeDislikeCommentaryDB,
 } from "../models/Commentary";
 import { PostsWithCreatorNameModel } from "../models/Posts";
+import { USER_ROLES } from "../models/User";
 import { IdGenerator } from "../services/IdGenerator";
 import { TokenManager } from "../services/TokenManager";
 
@@ -61,7 +64,7 @@ export class CommentaryBusiness {
     ).toCommentaryDB();
 
     await this.commentaryDatabase.insertCommentary(commentaryDB);
-    await this.commentaryDatabase.updatePostCommentNumber(postFound.id);
+    await this.commentaryDatabase.incrementPostCommentNumber(postFound.id);
 
     const output: undefined = undefined;
 
@@ -219,4 +222,34 @@ export class CommentaryBusiness {
 
     return output;
   };
+
+  public deleteCommentaryById = async (input: deleteCommentaryInput): Promise<deleteCommentaryOutput> => {
+    
+    const { token, id } = input
+
+    const payload = this.tokenManager.getPayload(token)
+
+    if(!payload){
+      throw new UnauthorizedError()
+    }
+
+    const commentaryExist = await this.commentaryDatabase.findCommentaryById(id)
+
+    if (!commentaryExist) {
+      throw new NotFoundError("Comentario não existe");
+    }
+
+  if (payload.role !== USER_ROLES.ADMIN) {
+    if (commentaryExist.creator_id !== payload.id) {
+      throw new ForbiddenError("Somente quem criou o comentário pode apagar");
+    }
+  }
+
+    await this.commentaryDatabase.deleteCommentary(commentaryExist.id)
+    await this.commentaryDatabase.decrementPostCommentNumber(commentaryExist.post_id)
+
+    const output = undefined
+
+    return output
+  }
 }

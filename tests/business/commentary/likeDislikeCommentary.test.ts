@@ -125,7 +125,7 @@ describe("Testando likeDislikeCommentary", () => {
     } catch (error) {
       if (error instanceof ZodError) {
         expect(error.issues[0].message).toBe(
-          "String must contain at least 1 character(s)"
+          "'id' deve possuir no mínimo 1 caractere"
         );
       }
     }
