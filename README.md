@@ -44,6 +44,10 @@ Acessar a API do Labeddit em `http://localhost:<PORTA>/`, onde `<PORTA>` é a po
 - `PUT /commentary/:id/like`: Rota para dar um like ou dislike do comentários. Envie um JSON contento idCommentaryToLikeDislike e likeOrDislike, além do token de autenticação no cabeçalho Authorization.
 - `DEL /commentary/:id`: Rota para deletar comentários. Envie um JSON contento id, além do token de autenticação no cabeçalho Authorization.
 
+## Postman 
+
+https://documenter.getpostman.com/view/24823107/2s946h7X8R#a102c48f-a1ee-4c36-aa9f-3e154ce25004
+
 ## Contribuição
 
 Contribuições são bem-vindas! Sinta-se à vontade para abrir uma pull request com melhorias, correções de bugs ou novos recursos.
