@@ -51,3 +51,7 @@ https://documenter.getpostman.com/view/24823107/2s946h7X8R#a102c48f-a1ee-4c36-aa
 ## Contribuição
 
 Contribuições são bem-vindas! Sinta-se à vontade para abrir uma pull request com melhorias, correções de bugs ou novos recursos.
+
+## Front-end
+
+Repositório do front-end correspondente ao back-end do Labeddit https://github.com/Rebeccix/Labeddit-Frontend
